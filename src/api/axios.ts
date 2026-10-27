@@ -5,9 +5,9 @@ import type { LoginResponse } from "@/model/login.model";
 
 const api = axios.create({
   baseURL: "/api",
-  headers: {
-    "Content-Type": "application/json",
-  },
+  // headers: {
+  //   "Content-Type": "application/json",
+  // },
 });
 
 const publicEndpoints = ["/auth/login", "/auth/refresh", "/captcha"];
