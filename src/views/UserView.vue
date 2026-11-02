@@ -17,8 +17,9 @@ import { getAllRoles } from "@/api/role";
 import type { UserModel, UserRequest } from "@/model/user.model";
 import type { RoleModel } from "@/model/role.model";
 import { getRoleConfig } from "@/util/role-config";
-import type { ElFormItem, UploadFile } from "element-plus";
+import type { ElFormItem, UploadFile, UploadInstance } from "element-plus";
 
+const profileUpload = ref<UploadInstance | null>(null);
 const users = ref<UserModel[]>([]);
 const roles = ref<RoleModel[]>([]);
 
@@ -118,6 +119,8 @@ const openCreateDialog = () => {
   form.profile = null;
   form.roleIds = [];
   form.enabled = true;
+  profileImage.value = null;
+  profileUpload.value?.clearFiles();
   formDialog.value = true;
 };
 
@@ -139,6 +142,8 @@ const openEditDialog = (user: UserModel) => {
     .filter((role) => user.roles.includes(role.name))
     .map((role) => role.id);
   form.enabled = user.enabled;
+  profileImage.value = null;
+  profileUpload.value?.clearFiles();
   formDialog.value = true;
 };
 
@@ -370,14 +375,20 @@ onMounted(() => {
 
       <!-- Table -->
       <el-table v-loading="loading" :data="users" stripe style="width: 100%">
+        <el-table-column prop="profile" label="Profile" min-width="150">
+          <template #default="{ row }">
+            <v-img
+              :src="row.profile"
+              alt="Profile Image"
+              width="80"
+              height="80"
+              cover
+            />
+          </template>
+        </el-table-column>
         <el-table-column prop="id" label="#" width="80" />
         <el-table-column prop="name" label="Name" min-width="150" />
         <el-table-column prop="email" label="Email" min-width="220" />
-        <el-table-column prop="profile" label="Profile" min-width="150">
-          <template #default="{ row }">
-            {{ row.profile || "-" }}
-          </template>
-        </el-table-column>
 
         <!-- Roles -->
         <el-table-column label="Roles" min-width="200">
@@ -468,16 +479,13 @@ onMounted(() => {
           />
         </el-form-item>
 
-        <el-form-item :label="editingUser ? 'New Password' : 'Password'">
+        <el-form-item :label="editingUser ? null : 'Password'">
           <el-input
+            v-if="!editingUser"
             v-model="form.password"
             type="password"
             show-password
-            :placeholder="
-              editingUser
-                ? 'Leave blank to keep current password'
-                : 'Enter password'
-            "
+            :placeholder="editingUser ? null : 'Enter password'"
           />
         </el-form-item>
 
@@ -503,11 +511,12 @@ onMounted(() => {
 
         <el-form-item label="Profile Image">
           <el-upload
+            ref="profileUpload"
             :auto-upload="false"
             :show-file-list="true"
             :limit="1"
-            accept="image/*"
             :on-change="handleProfileImage"
+            accept="image/*"
           >
             <el-button>Select Image</el-button>
           </el-upload>

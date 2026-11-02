@@ -7,9 +7,11 @@ import { getCaptcha } from "@/api/captcha";
 import type { CaptchaModel } from "@/model/captcha.model";
 import { getApiErrorTitle } from "@/util/api-error";
 import { login } from "@/api/login";
+import { useI18n } from "vue-i18n";
 
 const router = useRouter();
 const authStore = useAuthStore();
+const { t } = useI18n();
 
 const loginForm = reactive({
   email: "",
@@ -125,6 +127,7 @@ onUnmounted(() => {
     <div class="login-card">
       <!-- Logo -->
       <div class="logo">
+        <h1>{{ t("message.hello") }}</h1>
         <!-- Your school logo will go here -->
       </div>
 

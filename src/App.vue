@@ -1,9 +1,46 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from "vue-router";
+import { useAuthStore } from "@/stores/auth";
+import { useRouter } from "vue-router";
+import { ElMessageBox } from "element-plus";
+
+const authStore = useAuthStore();
+const router = useRouter();
+
+const handleLogout = async () => {
+  try {
+    await ElMessageBox.confirm(
+      "Are you sure you want to logout?",
+      "Logout Confirmation",
+      {
+        confirmButtonText: "Yes",
+        cancelButtonText: "No",
+        type: "warning",
+      },
+    );
+  } catch (error) {
+    console.error("Logout failed:", error);
+  }
+  authStore.logout();
+  router.push("/login");
+};
 </script>
 
 <template>
   <aside>Sidebar</aside>
+  <header>
+    <div class="wrapper">
+      <nav v-if="authStore.isAuthenticated">
+        <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/dashboard">Dashboard</RouterLink>
+        <RouterLink to="/users">User</RouterLink>
+        <RouterLink v-if="!authStore.isAuthenticated" to="/login"
+          >Login</RouterLink
+        >
+        <a v-else @click.prevent="handleLogout" href="#">Logout</a>
+      </nav>
+    </div>
+  </header>
   <RouterView />
 </template>
 

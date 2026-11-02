@@ -7,18 +7,10 @@ import type {
   UserRequest,
 } from "@/model/user.model";
 
-/* -----------------------------
-   RESPONSE TYPES
------------------------------ */
-
 interface UserPaginatedResponse {
   data: UserModel[];
   pagination?: Pagination;
 }
-
-/* -----------------------------
-   GET USERS
------------------------------ */
 
 export const getUsers = (
   page: number,
@@ -36,9 +28,6 @@ export const getUsers = (
     .then((response) => response.data);
 };
 
-/* -----------------------------
-   GET USER BY ID
------------------------------ */
 
 export const getUserById = (id: number): Promise<ApiResponse<UserModel>> => {
   return api
@@ -46,9 +35,7 @@ export const getUserById = (id: number): Promise<ApiResponse<UserModel>> => {
     .then((response) => response.data);
 };
 
-/* -----------------------------
-   CREATE USER
------------------------------ */
+
 
 export const createUser = (
   request: UserRequest,
@@ -58,9 +45,6 @@ export const createUser = (
     .then((response) => response.data);
 };
 
-/* -----------------------------
-   UPDATE USER
------------------------------ */
 
 export const updateUser = (
   id: number,
@@ -71,19 +55,12 @@ export const updateUser = (
     .then((response) => response.data);
 };
 
-/* -----------------------------
-   DELETE USER
------------------------------ */
-
 export const deleteUser = (id: number): Promise<ApiResponse<void>> => {
   return api
     .delete<ApiResponse<void>>(`/user/${id}`)
     .then((response) => response.data);
 };
 
-/* -----------------------------
-   RESTORE USER
------------------------------ */
 
 export const restoreUser = (id: number): Promise<ApiResponse<UserModel>> => {
   return api
@@ -91,9 +68,6 @@ export const restoreUser = (id: number): Promise<ApiResponse<UserModel>> => {
     .then((response) => response.data);
 };
 
-/* -----------------------------
-   UPLOAD PROFILE IMAGE
------------------------------ */
 
 export const uploadProfileImage = (
   id: number,
@@ -108,9 +82,6 @@ export const uploadProfileImage = (
     .then((response) => response.data);
 };
 
-/* -----------------------------
-   ENABLE / DISABLE USER
------------------------------ */
 
 export const setUserEnabled = (
   id: number,
